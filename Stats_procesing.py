@@ -73,9 +73,13 @@ def in_directory_exists(in_path):
         print("No existe " + in_path)
         exit()
 
-def get_out_path_file(out_path, file_name):
+def out_directory_exists(out_path):
     if not os.path.exists(out_path):
         os.mkdir(out_path)
+    else:
+        [os.remove(os.path.join(out_path, f)) for f in os.listdir(out_path)]
+
+def get_out_path_file(out_path, file_name):
     return os.path.join(out_path, file_name)
 
 def get_in_path_file(in_path, file_name):
@@ -202,11 +206,12 @@ if __name__ == '__main__':
     gdb = get_GeoliteDB()
     dbc = get_DataBaseCon()
     in_path_files = in_directory_exists(in_path)
+    out_directory_exists(out_path)
 
     for f in in_path_files:
         print("Procesando Archivo " + f)
         logs_procesing( get_in_path_file(in_path, f), gdb, dbc, get_out_path_file(out_path, f))
         print("Separando Archivo Y convirtiendo a CSV" + f)
-        log_separing(out_path, f)
-        print("Agrupando los resultados")
-        csv_group_by(out_path)
+        log_separing(out_path, f) 
+    print("Agrupando los resultados")
+    csv_group_by(out_path)
